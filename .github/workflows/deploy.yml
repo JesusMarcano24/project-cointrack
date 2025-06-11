@@ -1,41 +1,41 @@
-name: Deploy CoinTrack to EC2
+name: Deploy to EC2
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Set up Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '23'
+    - name: Save SSH key
+      run: |
+        echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > cointrack-keys.pem
+        chmod 600 cointrack-keys.pem
 
-      - name: Build JAR with Maven
-        run: mvn clean package -DskipTests
+    - name: Copy files to EC2
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: 3.17.29.202
+        username: ubuntu
+        key_path: cointrack-keys.pem
+        source: "."
+        target: "/home/ubuntu/cointrack"
 
-      - name: Copy JAR to EC2
-        uses: appleboy/scp-action@v0.1.4
-        with:
-          host: 3.17.29.202
-          username: ubuntu
-          key_path: cointrack-keys.pem
-          source: target/CoinTrack-0.0.1-SNAPSHOT.jar
-          target: /home/ubuntu/cointrack
-
-      - name: Connect via SSH and run JAR
-        uses: appleboy/ssh-action@master
-        with:
-          host: 3.17.29.202
-          username: ubuntu
-          key_path: cointrack-keys.pem
-          script: |
-            pkill -f 'CoinTrack-0.0.1-SNAPSHOT.jar' || true
-            nohup java -jar /home/ubuntu/cointrack/CoinTrack-0.0.1-SNAPSHOT.jar > cointrack.log 2>&1 &
+    - name: Run Docker on EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: 3.17.29.202
+        username: ubuntu
+        key_path: cointrack-keys.pem
+        script: |
+          cd ~/cointrack
+          docker build -t cointrack .
+          docker stop cointrack || true
+          docker rm cointrack || true
+          docker run -d --name cointrack -p 80:8080 cointrack
