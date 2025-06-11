@@ -13,6 +13,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Set up JDK 21
+      uses: actions/setup-java@v3
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+
+    - name: Build with Maven
+      run: mvn clean package -DskipTests
+
     - name: Save SSH key
       run: |
         echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > cointrack-key.pem
@@ -24,7 +33,9 @@ jobs:
         host: 3.17.29.202
         username: ubuntu
         key_path: cointrack-key.pem
-        source: "."
+        source: |
+          Dockerfile
+          target/CoinTrack-0.0.1-SNAPSHOT.jar
         target: "/home/ubuntu/cointrack"
 
     - name: Run Docker on EC2
