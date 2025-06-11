@@ -1,9 +1,8 @@
-name: Build and Deploy to EC2
+name: Deploy to EC2
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build-and-deploy:
@@ -16,11 +15,14 @@ jobs:
       - name: Set up Java 23
         uses: actions/setup-java@v3
         with:
-          java-version: '23'
           distribution: 'temurin'
+          java-version: '23'
 
       - name: Build with Maven
         run: mvn clean package -DskipTests
+
+      - name: List build outputs
+        run: ls -l target
 
       - name: Copy files to EC2
         uses: appleboy/scp-action@v0.1.4
@@ -30,23 +32,21 @@ jobs:
           key_path: cointrack-keys.pem
           source: |
             Dockerfile
-            target/CoinTrack-0.0.1-SNAPSHOT.jar
+            target/*.jar
           target: "/home/ubuntu/cointrack"
 
-      - name: Run Docker on EC2
+      - name: SSH into EC2 and deploy Docker container
         uses: appleboy/ssh-action@master
         with:
           host: 3.17.29.202
           username: ubuntu
           key_path: cointrack-keys.pem
           script: |
-            cd ~/cointrack
-            echo "📦 Contenido en EC2:"
+            cd /home/ubuntu/cointrack
             ls -l
-            echo "🚧 Construyendo imagen Docker..."
-            docker build -t cointrack .
-            echo "🧹 Deteniendo y eliminando contenedor anterior (si existe)..."
+            JAR_NAME=$(ls target/*.jar | head -n 1)
+            echo "Using JAR: $JAR_NAME"
             docker stop cointrack || true
             docker rm cointrack || true
-            echo "🚀 Iniciando nuevo contenedor..."
-            docker run -d --name cointrack -p 80:8080 cointrack
+            docker build -t cointrack .
+            docker run -d --name cointrack -p 8080:8080 cointrack
