@@ -1,5 +1,14 @@
-# Dockerfile
+# Usa la imagen oficial de Java 23 (temurin)
 FROM eclipse-temurin:23-jdk-alpine
+
+# Establece el directorio de trabajo en el contenedor
 WORKDIR /app
-COPY CoinTrack-0.0.1-SNAPSHOT.jar CoinTrack-0.0.1-SNAPSHOT.jar
-ENTRYPOINT ["java", "-jar", "CoinTrack-0.0.1-SNAPSHOT.jar"]
+
+# Copia el JAR de la aplicación
+COPY target/CoinTrack-0.0.1-SNAPSHOT.jar CoinTrack.jar
+
+# Expone el puerto de la app
+EXPOSE 8080
+
+# Comando de ejecución
+CMD ["java", "-jar", "CoinTrack.jar"]
