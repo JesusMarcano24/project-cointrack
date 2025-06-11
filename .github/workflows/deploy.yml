@@ -12,35 +12,30 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Set up Java 23
+      - name: Set up Java
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '23'
 
-      - name: Build with Maven
+      - name: Build JAR with Maven
         run: mvn clean package -DskipTests
 
-      - name: Copy Dockerfile and JAR to EC2
+      - name: Copy JAR to EC2
         uses: appleboy/scp-action@v0.1.4
         with:
           host: 3.17.29.202
           username: ubuntu
           key_path: cointrack-keys.pem
-          source: |
-            Dockerfile
-            target/CoinTrack-0.0.1-SNAPSHOT.jar
+          source: target/CoinTrack-0.0.1-SNAPSHOT.jar
           target: /home/ubuntu/cointrack
 
-      - name: Connect via SSH and run Docker container
+      - name: Connect via SSH and run JAR
         uses: appleboy/ssh-action@master
         with:
           host: 3.17.29.202
           username: ubuntu
           key_path: cointrack-keys.pem
           script: |
-            cd /home/ubuntu/cointrack
-            docker stop cointrack || true
-            docker rm cointrack || true
-            docker build -t cointrack .
-            docker run -d --name cointrack -p 8080:8080 cointrack
+            pkill -f 'CoinTrack-0.0.1-SNAPSHOT.jar' || true
+            nohup java -jar /home/ubuntu/cointrack/CoinTrack-0.0.1-SNAPSHOT.jar > cointrack.log 2>&1 &
