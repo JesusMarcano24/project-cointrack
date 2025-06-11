@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: Build and Deploy to EC2
 
 on:
   push:
@@ -6,56 +6,47 @@ on:
       - main
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up JDK 23
-      uses: actions/setup-java@v3
-      with:
-        java-version: '23'
-        distribution: 'temurin'
+      - name: Set up Java 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
 
-    - name: Build with Maven
-      run: mvn clean package -DskipTests
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
 
-    - name: List files to verify .jar exists
-      run: ls -l target
+      - name: Copy files to EC2
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: 3.17.29.202
+          username: ubuntu
+          key_path: cointrack-keys.pem
+          source: |
+            Dockerfile
+            target/CoinTrack-0.0.1-SNAPSHOT.jar
+          target: "/home/ubuntu/cointrack"
 
-    - name: Prepare deployment folder
-      run: |
-        mkdir deploy
-        cp Dockerfile deploy/
-        cp target/*.jar deploy/
-
-    - name: Save SSH key
-      run: |
-        echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > cointrack-keys.pem
-        chmod 600 cointrack-keys.pem
-
-- name: Copy files to EC2
-  uses: appleboy/scp-action@v0.1.4
-  with:
-    host: 3.17.29.202
-    username: ubuntu
-    key_path: cointrack-keys.pem
-    source: |
-      Dockerfile
-      target/CoinTrack-0.0.1-SNAPSHOT.jar
-    target: "/home/ubuntu/cointrack"
-
-    - name: Run Docker on EC2
-      uses: appleboy/ssh-action@master
-      with:
-        host: 3.17.29.202
-        username: ubuntu
-        key_path: cointrack-keys.pem
-        script: |
-          cd ~/cointrack
-          docker build -t cointrack .
-          docker stop cointrack || true
-          docker rm cointrack || true
-          docker run -d --name cointrack -p 80:8080 cointrack
+      - name: Run Docker on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: 3.17.29.202
+          username: ubuntu
+          key_path: cointrack-keys.pem
+          script: |
+            cd ~/cointrack
+            echo "📦 Contenido en EC2:"
+            ls -l
+            echo "🚧 Construyendo imagen Docker..."
+            docker build -t cointrack .
+            echo "🧹 Deteniendo y eliminando contenedor anterior (si existe)..."
+            docker stop cointrack || true
+            docker rm cointrack || true
+            echo "🚀 Iniciando nuevo contenedor..."
+            docker run -d --name cointrack -p 80:8080 cointrack
