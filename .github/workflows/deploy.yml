@@ -22,6 +22,15 @@ jobs:
     - name: Build with Maven
       run: mvn clean package -DskipTests
 
+    - name: List files to verify .jar exists
+      run: ls -l target
+
+    - name: Prepare deployment folder
+      run: |
+        mkdir deploy
+        cp Dockerfile deploy/
+        cp target/*.jar deploy/
+
     - name: Save SSH key
       run: |
         echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > cointrack-keys.pem
@@ -33,9 +42,7 @@ jobs:
         host: 3.17.29.202
         username: ubuntu
         key_path: cointrack-keys.pem
-        source: |
-          Dockerfile
-          target/CoinTrack-0.0.1-SNAPSHOT.jar
+        source: "deploy/*"
         target: "/home/ubuntu/cointrack"
 
     - name: Run Docker on EC2
