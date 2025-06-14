@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body class="bg-base-100 text-base-content min-h-screen">
+    <!-- Tabla de Participantes -->
+    <div th:fragment="participantesGrupo(grupoId, participantes)" class="mb-8">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold">Participantes</h2>
+            <a th:href="@{/grupos/{grupoId}/participantes/nuevo(grupoId=${grupo.id})}" class="btn btn-sm btn-primary">Agregar Participante</a>
+        </div>
+        <table class="table w-full text-sm">
+            <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Saldo Inicial</th>
+                <th>Saldo Actual</th>
+                <th>Acción</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="p : ${participantes}">
+                <td th:text="${p.usuario.username}"></td>
+                <td th:text="'S/. ' + ${p.saldoInicial}"></td>
+                <td th:text="'S/. ' + ${p.saldoActual}"></td>
+                <td>
+                    <a th:href="@{/grupos/{grupoId}/participantes/eliminar/{usuarioId}(grupoId=${p.grupos.id}, usuarioId=${p.usuario.id})}"
+                       class="btn btn-xs btn-error">Eliminar</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
