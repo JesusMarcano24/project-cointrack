@@ -34,7 +34,7 @@
                 <input type="number" step="0.01" min="0" id="saldoInicial" name="saldoInicial" class="input input-bordered w-full" required>
             </div>
 
-            <div class="text-center">
+            <div class="flex justify-center gap-x-4 mt-4">
                 <button type="submit" class="btn btn-primary">Agregar</button>
                 <a th:href="@{'/grupos/ver/' + ${grupo.id}}" class="btn btn-secondary">Cancelar</a>
             </div>

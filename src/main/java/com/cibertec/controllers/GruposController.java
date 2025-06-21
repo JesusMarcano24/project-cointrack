@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,6 +52,7 @@ public class GruposController {
         try {
             Usuario usuario = obtenerUsuarioAutenticado();
             grupo.setUsuario(usuario);
+            grupo.setFechaCreacion(LocalDate.now());
             gruposService.crearGrupo(grupo);
             return "redirect:/grupos/lista";
         } catch (Exception e) {
@@ -77,12 +79,16 @@ public class GruposController {
             Grupos grupo = grupoOpt.get();
 
             List<GruposUsuario> participantes = gruposUsuarioService.obtenerParticipantesPorGrupo(grupoId);
-            BigDecimal totalIngresos = gruposUsuarioService.obtenerTotalIngresos(grupoId);
+            BigDecimal ingresosIniciales = gruposUsuarioService.obtenerTotalIngresos(grupoId);
+            BigDecimal ingresosAdicionales = transaccionesGrupalesService.obtenerTotalIngresos(grupoId);
+            BigDecimal totalGastos = transaccionesGrupalesService.obtenerTotalGastos(grupoId);
             List<Transacciones> transacciones = transaccionesGrupalesService.listarPorGrupo(grupoId);
 
             model.addAttribute("grupo", grupo);
             model.addAttribute("participantes", participantes);
-            model.addAttribute("totalIngresos", totalIngresos);
+            model.addAttribute("totalIngresos", ingresosIniciales);
+            model.addAttribute("totalGastos", totalGastos);
+            model.addAttribute("ingresosAdicionales", ingresosAdicionales);
             model.addAttribute("transacciones", transacciones);
             model.addAttribute("grupoId", grupoId);
 

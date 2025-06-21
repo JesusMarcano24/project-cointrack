@@ -2,22 +2,42 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head></head>
 <body>
-<!-- Fragmento: Resumen Financiero -->
-<div th:fragment="resumenFinanciero(totalIngresos, totalGastos)">
+<!-- Fragmento: Resumen Financiero Mejorado -->
+<div th:fragment="resumenFinanciero(totalIngresos, totalGastos, ingresosAdicionales)">
     <div class="bg-white p-4 rounded-lg shadow-md">
         <h2 class="text-lg font-bold mb-4">Resumen Financiero</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 text-sm">
+            <!-- Total Ingresos -->
             <div class="p-4 bg-base-100 rounded-lg border">
-                <span class="text-gray-500">Total Ingresos Iniciales</span>
-                <div class="text-xl font-semibold text-green-600" th:text="'S/. ' + ${totalIngresos}">S/. 0.00</div>
+                <span class="text-gray-500">Total Ingresos</span>
+                <div class="text-xl font-semibold text-green-700"
+                     th:text="'S/. ' + (${totalIngresos} + ${ingresosAdicionales})">S/. 0.00</div>
             </div>
+
+            <!-- Total Gastos -->
             <div class="p-4 bg-base-100 rounded-lg border">
-                <span class="text-gray-500">Total Gastos del Grupo</span>
-                <div class="text-xl font-semibold text-red-500" th:text="'S/. ' + ${totalGastos}">S/. 0.00</div>
+                <span class="text-gray-500">Total Gastos</span>
+                <div class="text-xl font-semibold text-red-600"
+                     th:text="'S/. ' + ${totalGastos}">S/. 0.00</div>
+            </div>
+
+            <!-- Balance Disponible -->
+            <div class="p-4 bg-base-100 rounded-lg border">
+                <span class="text-gray-500">Balance Disponible</span>
+                <div class="text-xl font-semibold text-blue-600"
+                     th:text="'S/. ' + ((${totalIngresos} + ${ingresosAdicionales}) - ${totalGastos})">S/. 0.00</div>
+            </div>
+
+            <!-- Desglose (opcional visual) -->
+            <div class="p-4 bg-base-100 rounded-lg border">
+                <span class="text-gray-500">Detalle de Ingresos</span>
+                <div class="text-sm text-gray-700">
+                    <p th:text="'Iniciales: S/. ' + ${totalIngresos}">Iniciales: S/. 0.00</p>
+                    <p th:text="'Adicionales: S/. ' + ${ingresosAdicionales}">Adicionales: S/. 0.00</p>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 </body>
 </html>

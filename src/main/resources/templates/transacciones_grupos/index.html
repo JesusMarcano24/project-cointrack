@@ -27,7 +27,7 @@
     <div th:replace="~{fragments/detalles_grupos_fragment :: detalleGrupo(${grupo}, ${totalIngresos})}"></div>
 
     <!-- Fragmento: Resumen financiero -->
-    <div th:replace="~{fragments/resumen_grupos_fragment :: resumenFinanciero(${totalIngresos}, ${totalGastos})}"></div>
+    <div th:replace="~{fragments/resumen_grupos_fragment :: resumenFinanciero(${totalIngresos}, ${totalGastos}, ${ingresosAdicionales})}"></div>
 
     <!-- Fragmento: Participantes -->
     <div>
