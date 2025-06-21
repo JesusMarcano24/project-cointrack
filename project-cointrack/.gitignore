@@ -1,0 +1,35 @@
+HELP.md
+
+# Ignorar todo en target/
+target/
+
+# ¡Exceptuar solo el archivo JAR que quieres subir!
+!target/CoinTrack-0.0.1-SNAPSHOT.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
