@@ -77,6 +77,8 @@
           <th
             class="cursor-pointer underline border border-white"
             onclick="sortTable(2)">Fecha</th>
+          <th class="cursor-pointer underline border border-white"
+              onclick="sortTable(3)">Categoría</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -90,6 +92,7 @@
             th:text="${transaccion.tipo.toString() == 'INGRESO' ? '+ S/' + transaccion.monto : '- S/' + transaccion.monto}">
           </td>
           <td th:text="${transaccion.fecha}"></td>
+          <td th:text="${transaccion.categoria.nombre}"></td>
           <td class="flex justify-end"><a
               class="btn grow btn-sm btn-success"
               th:href="@{/transacciones/{id}/edit(id=${transaccion.id})}">Editar</a>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html
+        lang="es"
+        xmlns:th="http://www.thymeleaf.org"
+        data-theme="lofi"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle del Grupo</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.22/dist/full.min.css"
+          rel="stylesheet"
+          type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+
+<!-- Header común -->
+<div th:replace="~{layout/base :: header}"></div>
+
+<!-- Contenedor principal -->
+<div class="w-full max-w-5xl mx-auto mt-10 bg-white shadow-md rounded-2xl p-6 space-y-8">
+
+    <!-- Título principal -->
+    <h1 class="text-3xl font-bold text-center text-gray-800" th:text="'Grupo: ' + ${grupo.nombre}"></h1>
+
+    <!-- Fragmento: Detalles del grupo -->
+    <div th:replace="~{fragments/detalles_grupos_fragment :: detalleGrupo(${grupo}, ${totalIngresos})}"></div>
+
+    <!-- Fragmento: Resumen financiero -->
+    <div th:replace="~{fragments/resumen_grupos_fragment :: resumenFinanciero(${totalIngresos}, ${totalGastos}, ${ingresosAdicionales})}"></div>
+
+    <!-- Fragmento: Participantes -->
+    <div>
+        <div th:replace="~{fragments/participantes_grupos_fragment :: participantesGrupo(${grupoId}, ${participantes})}"></div>
+    </div>
+
+    <!-- Fragmento: Transacciones -->
+    <div>
+        <div th:replace="~{fragments/transac_grupos_fragment :: tablaTransacciones(${transacciones})}"></div>
+    </div>
+
+    <!-- Botón para volver -->
+    <div class="text-center mt-6">
+        <a th:href="@{/grupos/lista}" class="btn btn-primary">Volver a la lista de grupos</a>
+    </div>
+</div>
+
+</body>
+</html>

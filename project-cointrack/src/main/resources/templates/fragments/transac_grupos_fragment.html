@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" data-theme="lofi">
+<head>
+</head>
+<body>
+<!-- fragments/tabla_transacciones.html -->
+<div th:fragment="tablaTransacciones(lista)">
+    <h2 class="text-lg font-bold mb-4">Transacciones Grupales</h2>
+    <a th:href="@{/grupos/{grupoId}/transacciones-grupales/new(grupoId=${grupoId})}"  class="btn btn-sm btn-primary">Agregar transaccion</a>
+    <table class="table w-full text-sm">
+        <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Tipo</th>
+            <th>Monto</th>
+            <th>Descripción</th>
+            <th>Categoría</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="t : ${lista}">
+            <td th:text="${#temporals.format(t.fecha, 'dd/MM/yyyy')}">Fecha</td>
+            <td th:text="${t.tipo}">Tipo</td>
+            <td th:text="${t.monto}">Monto</td>
+            <td th:text="${t.descripcion}">Descripción</td>
+            <td th:text="${t.categoria.nombre}">Categoría</td>
+            <td>
+                <a th:href="@{/grupos/{grupoId}/transacciones-grupales/{id}/edit(grupoId=${t.grupo.id}, id=${t.id})}" class="btn btn-xs btn-info">Editar</a>
+                <a th:href="@{/grupos/{grupoId}/transacciones-grupales/{id}/delete(grupoId=${t.grupo.id}, id=${t.id})}" class="btn btn-xs btn-error">Eliminar</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

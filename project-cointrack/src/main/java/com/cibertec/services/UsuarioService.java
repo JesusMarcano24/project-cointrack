@@ -1,5 +1,6 @@
 package com.cibertec.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,17 @@ public class UsuarioService implements org.springframework.security.core.userdet
 
 	public Optional<Usuario> findByUsername(String username) {
 		return usuarioRepository.findByUsername(username);
+	}
+
+	public Optional<Usuario> findById(Integer id) {
+		return usuarioRepository.findById(id);
+	}
+
+	public List<Usuario> listarUsuarios() {
+		return usuarioRepository.findAll();
+	}
+
+	public Usuario save(Usuario usuario) {
+		return usuarioRepository.save(usuario);
 	}
 }
