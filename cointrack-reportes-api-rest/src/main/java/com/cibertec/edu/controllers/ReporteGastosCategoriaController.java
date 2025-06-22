@@ -28,6 +28,13 @@ public class ReporteGastosCategoriaController {
     public ResponseEntity<List<ReporteGastosCategoria>> obtenerPorUsuario(@PathVariable Integer usuarioId) {
         return ResponseEntity.ok(service.obtenerPorUsuario(usuarioId));
     }
+    
+    @GetMapping("/usuario/{usuarioId}/buscar-categoria/{categoria}")
+    public ResponseEntity<List<ReporteGastosCategoria>> buscarPorUsuarioYCategoria(
+            @PathVariable Integer usuarioId,
+            @PathVariable String categoria) {
+        return ResponseEntity.ok(service.buscarPorUsuarioYCategoria(usuarioId, categoria));
+    }
 
     @PostMapping
     public ResponseEntity<ReporteGastosCategoria> guardar(@RequestBody ReporteGastosCategoria reporte) {

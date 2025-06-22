@@ -1,5 +1,6 @@
 package com.cibertec.edu.services;
 
+import java.time.Year;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,16 @@ public class ReporteIngresosMensualesService {
         }
 
         return repository.findByUsuarioIdAndMesAndAnio(usuarioId, mes, anio);
+    }
+    
+    public List<ReporteIngresosMensuales> obtenerPorUsuarioYAnio(Long usuarioId, Integer anio) {
+        if (usuarioId == null || usuarioId <= 0) {
+            throw new BadRequestException("El usuarioId debe ser válido.");
+        }
+        if (anio == null || anio < 1900 || anio > Year.now().getValue()) {
+            throw new BadRequestException("El año ingresado no es válido.");
+        }
+        return repository.findByUsuarioIdAndAnio(usuarioId, anio);
     }
 
     public ReporteIngresosMensuales guardar(ReporteIngresosMensuales reporte) {

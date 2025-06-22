@@ -21,6 +21,16 @@ public class ReporteGastosCategoriaServiceImpl {
         }
         return repository.findByUsuarioId(usuarioId);
     }
+    
+    public List<ReporteGastosCategoria> buscarPorUsuarioYCategoria(Integer usuarioId, String categoria) {
+        if (usuarioId == null || usuarioId <= 0) {
+            throw new BadRequestException("El usuarioId debe ser mayor que cero.");
+        }
+        if (categoria == null || categoria.trim().isEmpty()) {
+            throw new BadRequestException("La categoría no puede estar vacía.");
+        }
+        return repository.findByUsuarioIdAndCategoriaContainingIgnoreCase(usuarioId, categoria.trim());
+    }
 
     public ReporteGastosCategoria guardar(ReporteGastosCategoria reporte) {
         if (reporte == null || reporte.getUsuarioId() == null || 

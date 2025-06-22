@@ -28,6 +28,13 @@ public class ReporteMetasAhorroController {
     public ResponseEntity<List<ReporteMetasAhorro>> obtenerPorUsuario(@PathVariable Long usuarioId) {
         return ResponseEntity.ok(service.obtenerPorUsuario(usuarioId));
     }
+    
+    @GetMapping("/usuario/{usuarioId}/buscar-meta/{nombre}")
+    public ResponseEntity<List<ReporteMetasAhorro>> buscarPorNombreYUsuario(
+            @PathVariable Long usuarioId,
+            @PathVariable String nombre) {
+        return ResponseEntity.ok(service.buscarPorNombreYUsuario(usuarioId, nombre));
+    }
 
     @PostMapping
     public ResponseEntity<ReporteMetasAhorro> guardar(@RequestBody ReporteMetasAhorro reporte) {

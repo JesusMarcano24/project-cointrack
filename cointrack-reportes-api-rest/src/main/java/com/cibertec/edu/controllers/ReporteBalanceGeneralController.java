@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cibertec.edu.models.ReporteBalanceGeneral;
@@ -27,6 +28,16 @@ public class ReporteBalanceGeneralController {
     @GetMapping("/usuario/{usuarioId}")
     public ResponseEntity<List<ReporteBalanceGeneral>> obtenerPorUsuario(@PathVariable Long usuarioId) {
         return ResponseEntity.ok(service.obtenerPorUsuario(usuarioId));
+    }
+    
+    @GetMapping("/rango")
+    public ResponseEntity<List<ReporteBalanceGeneral>> obtenerPorRango(
+            @RequestParam Long usuarioId,
+            @RequestParam int anioInicio,
+            @RequestParam int mesInicio,
+            @RequestParam int anioFin,
+            @RequestParam int mesFin) {
+        return ResponseEntity.ok(service.obtenerPorRango(usuarioId, anioInicio, mesInicio, anioFin, mesFin));
     }
 
     @PostMapping

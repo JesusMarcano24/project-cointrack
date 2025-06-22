@@ -25,6 +25,13 @@ public class ReporteIngresosMensualesController {
     public ResponseEntity<ReporteIngresosMensuales> guardar(@RequestBody ReporteIngresosMensuales reporte) {
         return ResponseEntity.ok(service.guardar(reporte));
     }
+    
+    @GetMapping("/usuario/{usuarioId}/anio/{anio}")
+    public ResponseEntity<List<ReporteIngresosMensuales>> obtenerPorUsuarioYAnio(
+            @PathVariable Long usuarioId,
+            @PathVariable Integer anio) {
+        return ResponseEntity.ok(service.obtenerPorUsuarioYAnio(usuarioId, anio));
+    }
 
     @GetMapping("/usuario/{usuarioId}/anio/{anio}/mes/{mes}")
     public ResponseEntity<List<ReporteIngresosMensuales>> obtenerPorUsuarioYMes(
