@@ -14,7 +14,6 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>CoinTrack</name>
     <description>ProyectoSpring para EFSRTIII</description>
-    <packaging>jar</packaging>
     <url />
     <licenses>
         <license />
@@ -39,6 +38,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.10.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -67,6 +71,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>1.18.38</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -97,6 +102,7 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
+                            <version>1.18.38</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

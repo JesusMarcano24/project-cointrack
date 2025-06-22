@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="es"
+      data-theme="lofi">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Grupos</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.22/dist/full.min.css"
+          rel="stylesheet"
+          type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-base-100 text-base-content min-h-screen">
+
+<!-- Header común -->
+<div th:replace="~{layout/base :: header}"></div>
+
+<!-- Contenedor principal -->
+<div class="container mx-auto px-4 py-8">
+    <!-- Título -->
+    <h1 class="text-3xl font-bold text-center mb-6">Mis Grupos</h1>
+
+    <!-- Botón de nuevo grupo -->
+    <div class="text-center mb-6">
+        <a th:href="@{/grupos/nuevo}" class="btn btn-primary">+ Crear nuevo grupo</a>
+    </div>
+
+    <!-- Tabla de grupos -->
+    <div class="overflow-x-auto bg-white shadow rounded-lg">
+        <table class="table table-zebra w-full">
+            <thead>
+            <tr class="bg-base-200">
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Fecha de creación</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="grupo : ${grupos}">
+                <td th:text="${grupo.id}">1</td>
+                <td th:text="${grupo.nombre}">Grupo A</td>
+                <td th:text="${grupo.descripcion}">Descripción A</td>
+                <td th:text="${#temporals.format(grupo.fechaCreacion, 'dd/MM/yyyy')}">13/06/2025</td>
+                <td class="flex gap-2">
+                    <a th:href="@{/grupos/ver/{grupoId}(grupoId=${grupo.id})}" class="btn btn-info btn-sm">Ver</a>
+                    <a th:href="@{/grupos/eliminar/{id}(id=${grupo.id})}"
+                       onclick="return confirm('¿Estás seguro de eliminar este grupo?');"
+                       class="btn btn-error btn-sm">Eliminar</a>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Error -->
+    <p th:if="${error}" th:text="${error}" class="text-red-600 text-center mt-4"></p>
+</div>
+
+</body>
+</html>

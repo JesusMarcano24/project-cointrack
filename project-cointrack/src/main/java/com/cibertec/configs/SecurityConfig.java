@@ -23,12 +23,20 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		// Configura la seguridad HTTP
-		http.authorizeHttpRequests(
-				auth -> auth.requestMatchers("/transacciones/**").authenticated().anyRequest().permitAll())
-				.formLogin(form -> form.loginPage("/login").permitAll().failureUrl("/login?error")
-						.defaultSuccessUrl("/").usernameParameter("username").passwordParameter("password"))
-				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout").permitAll());
+		http.authorizeHttpRequests(auth -> auth
+						.requestMatchers("/transacciones/**").authenticated()
+						.requestMatchers("/grupos/**").authenticated()
+						.anyRequest().permitAll())
+				.formLogin(form -> form
+						.loginPage("/login").permitAll()
+						.failureUrl("/login?error")
+						.defaultSuccessUrl("/")
+						.usernameParameter("username")
+						.passwordParameter("password"))
+				.logout(logout -> logout
+						.logoutUrl("/logout")
+						.logoutSuccessUrl("/login?logout")
+						.permitAll());
 
 		http.authenticationManager(authenticationManager(http));
 

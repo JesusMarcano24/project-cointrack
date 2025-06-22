@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.cibertec.models.Categoria;
+import com.cibertec.repositories.CategoriaRepository;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,12 +34,14 @@ public class TransaccionesController {
 	private final TransaccionesService transaccionesService;
 	private final UsuarioService usuarioService;
 	private final ExportarExcelService excelExportService;
+	private final CategoriaRepository categoriaRepository;
 
 	public TransaccionesController(TransaccionesService transaccionesService, UsuarioService usuarioService,
-			ExportarExcelService excelExportService) {
+			ExportarExcelService excelExportService, CategoriaRepository categoriaRepository) {
 		this.transaccionesService = transaccionesService;
 		this.usuarioService = usuarioService;
 		this.excelExportService = excelExportService;
+		this.categoriaRepository = categoriaRepository;
 	}
 
 	@GetMapping
@@ -97,6 +101,7 @@ public class TransaccionesController {
 			model.addAttribute("actionUrl", "/transacciones/new");
 			model.addAttribute("formTitle", "Nueva transacción");
 			model.addAttribute("transaccion", transaccion);
+			model.addAttribute("categorias", categoriaRepository.findAll());
 			return "transacciones/form";
 		} catch (Exception e) {
 			model.addAttribute("error", "Error al mostrar el formulario: " + e.getMessage());
@@ -110,11 +115,17 @@ public class TransaccionesController {
 			Usuario usuario = obtenerUsuarioAutenticado();
 			transaccion.setUsuario(usuario);
 
+			Integer categoriaId = transaccion.getCategoria().getId();
+			Categoria categoria = categoriaRepository.findById(categoriaId)
+					.orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
+
+			transaccion.setCategoria(categoria);
 			transaccionesService.createTransaccion(transaccion);
 			return "redirect:/transacciones";
 		} catch (Exception e) {
 			model.addAttribute("error", "Error al crear la transacción: " + e.getMessage());
 			model.addAttribute("transaccion", transaccion);
+			model.addAttribute("categorias", categoriaRepository.findAll());
 			return "transacciones/form";
 		}
 	}
@@ -131,6 +142,7 @@ public class TransaccionesController {
 			model.addAttribute("actionUrl", "/transacciones/" + transaccion.getId() + "/edit");
 			model.addAttribute("formTitle", "Editar transacción");
 			model.addAttribute("transaccion", transaccion);
+			model.addAttribute("categorias", categoriaRepository.findAll());
 			return "transacciones/form";
 		} catch (Exception e) {
 			model.addAttribute("error", "Error al cargar la transacción para edición: " + e.getMessage());
@@ -145,13 +157,19 @@ public class TransaccionesController {
 
 			Usuario usuario = obtenerUsuarioAutenticado();
 			transaccion.setUsuario(usuario);
-
 			transaccion.setId(id);
+
+			Integer categoriaId = transaccion.getCategoria().getId();
+			Categoria categoria = categoriaRepository.findById(categoriaId)
+					.orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
+			transaccion.setCategoria(categoria);
+
 			transaccionesService.updateTransaccion(transaccion);
 			return "redirect:/transacciones";
 		} catch (Exception e) {
 			model.addAttribute("error", "Error al actualizar la transacción: " + e.getMessage());
 			model.addAttribute("transaccion", transaccion);
+			model.addAttribute("categorias", categoriaRepository.findAll());
 			return "transacciones/form";
 		}
 	}

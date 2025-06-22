@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html
-  lang="es"
-  data-theme="black"
-  xmlns:th="http://www.thymeleaf.org">
+        lang="es"
+        data-theme="black"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
 <meta charset="UTF-8">
 <meta
@@ -24,6 +25,9 @@
         <ul class="menu menu-horizontal items-center px-1">
           <li>
             <a href="/transacciones">Transacciones</a>
+          </li>
+          <li>
+            <a th:href="@{/grupos/lista}">Grupos</a>
           </li>
           <li sec:authorize="isAuthenticated()">
             <form

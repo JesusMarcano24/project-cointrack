@@ -20,7 +20,7 @@ public class TransaccionesService {
 	}
 
 	public List<Transacciones> getAllTransacciones(Integer usuarioId) {
-		return transaccionesRepository.findByUsuarioId(usuarioId);
+		return transaccionesRepository.findTransaccionesPersonales(usuarioId);
 	}
 
 	public Optional<Transacciones> getTransaccionById(Integer id, Integer usuarioId) {
@@ -51,14 +51,16 @@ public class TransaccionesService {
 	}
 
 	public BigDecimal getTotalIngresos(Integer usuarioId) {
-		return transaccionesRepository.findByUsuarioId(usuarioId).stream()
-				.filter(t -> t.getTipo() == Transacciones.TipoTransaccion.INGRESO).map(Transacciones::getMonto)
+		return transaccionesRepository.findTransaccionesPersonales(usuarioId).stream()
+				.filter(t -> t.getTipo() == Transacciones.TipoTransaccion.INGRESO)
+				.map(Transacciones::getMonto)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
 	public BigDecimal getTotalGastos(Integer usuarioId) {
-		return transaccionesRepository.findByUsuarioId(usuarioId).stream()
-				.filter(t -> t.getTipo() == Transacciones.TipoTransaccion.GASTO).map(Transacciones::getMonto)
+		return transaccionesRepository.findTransaccionesPersonales(usuarioId).stream()
+				.filter(t -> t.getTipo() == Transacciones.TipoTransaccion.GASTO)
+				.map(Transacciones::getMonto)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 }

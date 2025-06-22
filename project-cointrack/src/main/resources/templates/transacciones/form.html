@@ -58,6 +58,7 @@
         </label>
         <select
           th:field="*{tipo}"
+          id="tipo"
           class="select select-bordered w-full">
           <option value="GASTO">Gasto</option>
           <option value="INGRESO">Ingreso</option>
@@ -87,6 +88,7 @@
         type="number"
         step="0.01"
         th:field="*{monto}"
+        id="monto"
         required
         class="input input-bordered w-full"
         placeholder="Ingrese el monto" />
@@ -99,8 +101,17 @@
       </label>
       <textarea
         th:field="*{descripcion}"
+        id="descripcion"
         class="textarea textarea-bordered w-full"
         placeholder="Ingrese una descripción"></textarea>
+    </div>
+    <div class="form-control">
+      <label for="categoria" class="label">
+        <span class="label-text">Categoría:</span>
+      </label>
+      <select th:field="*{categoria.id}" id="categoria" class="select select-bordered w-full">
+        <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nombre}">Categoría</option>
+      </select>
     </div>
     <!-- Botones para establecer fechas -->
     <div class="flex gap-4">

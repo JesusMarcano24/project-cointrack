@@ -54,69 +54,11 @@ public class Transacciones {
 		INGRESO, GASTO
 	}
 
-	public Integer getId() {
-		return id;
-	}
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "categoria_id", nullable = false)
+	private Categoria categoria;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public Usuario getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
-
-	public TipoTransaccion getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(TipoTransaccion tipo) {
-		this.tipo = tipo;
-	}
-
-	public BigDecimal getMonto() {
-		return monto;
-	}
-
-	public void setMonto(BigDecimal monto) {
-		this.monto = monto;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
-	public LocalDate getFecha() {
-		return fecha;
-	}
-
-	public void setFecha(LocalDate fecha) {
-		this.fecha = fecha;
-	}
-
-	public LocalDateTime getFechaCreacion() {
-		return fechaCreacion;
-	}
-
-	public void setFechaCreacion(LocalDateTime fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
-	}
-
-	public LocalDateTime getFechaActualizacion() {
-		return fechaActualizacion;
-	}
-
-	public void setFechaActualizacion(LocalDateTime fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
-	}
-	
-	
+	@ManyToOne
+	@JoinColumn(name = "grupo_id")
+	private Grupos grupo;
 }

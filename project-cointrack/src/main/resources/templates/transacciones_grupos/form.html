@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html
+        lang="es"
+        xmlns:th="http://www.thymeleaf.org"
+        data-theme="lofi">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de Grupo</title>
+    <link
+            href="https://cdn.jsdelivr.net/npm/daisyui@4.12.22/dist/full.min.css"
+            rel="stylesheet"
+            type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<!-- Header -->
+<div th:replace="~{layout/base :: header}"></div>
+
+<!-- Formulario centrado -->
+<form
+        th:action="@{/grupos/guardar}"
+        th:object="${grupo}"
+        method="post"
+        class="flex relative flex-col mt-2 gap-4 p-5 w-full max-w-lg mx-auto bg-white rounded-lg shadow">
+
+    <!-- Botón Volver -->
+    <div class="absolute left-0 top-0">
+        <a href="/grupos/lista" class="btn btn-sm btn-primary ml-5 mt-1">Volver</a>
+    </div>
+
+    <!-- Título -->
+    <h1 class="text-center text-3xl font-bold my-5">Crear Nuevo Grupo</h1>
+
+    <!-- Campo Nombre -->
+    <div class="form-control">
+        <label for="nombre" class="label">
+            <span class="label-text">Nombre del Grupo:</span>
+        </label>
+        <input
+                type="text"
+                th:field="*{nombre}"
+                id="nombre"
+                required
+                class="input input-bordered w-full"
+                placeholder="Ej: Viaje a cusco" />
+    </div>
+
+    <!-- Campo Descripción -->
+    <div class="form-control">
+        <label for="descripcion" class="label">
+            <span class="label-text">Descripción:</span>
+        </label>
+        <textarea
+                th:field="*{descripcion}"
+                id="descripcion"
+                class="textarea textarea-bordered w-full"
+                placeholder="Ej: Fondo común para el viaje..."></textarea>
+    </div>
+
+    <!-- Error -->
+    <div th:if="${error}" class="alert alert-error mb-2">
+        <p th:text="${error}"></p>
+    </div>
+
+    <!-- Botón Guardar -->
+    <div class="form-control">
+        <button type="submit" class="btn btn-primary w-full">Guardar Grupo</button>
+    </div>
+</form>
+</body>
+</html>
