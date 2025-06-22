@@ -1,9 +1,6 @@
 package com.cibertec.controllers;
 
-import com.cibertec.models.Grupos;
-import com.cibertec.models.GruposUsuario;
-import com.cibertec.models.Transacciones;
-import com.cibertec.models.Usuario;
+import com.cibertec.models.*;
 import com.cibertec.services.GruposService;
 import com.cibertec.services.GruposUsuarioService;
 import com.cibertec.services.TransaccionesGrupalesService;
@@ -11,6 +8,7 @@ import com.cibertec.services.UsuarioService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

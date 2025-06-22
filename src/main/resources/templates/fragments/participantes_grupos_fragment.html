@@ -13,7 +13,6 @@
             <tr>
                 <th>Nombre</th>
                 <th>Saldo Inicial</th>
-                <th>Saldo Actual</th>
                 <th>Acción</th>
             </tr>
             </thead>
@@ -21,7 +20,6 @@
             <tr th:each="p : ${participantes}">
                 <td th:text="${p.usuario.username}"></td>
                 <td th:text="'S/. ' + ${p.saldoInicial}"></td>
-                <td th:text="'S/. ' + ${p.saldoActual}"></td>
                 <td>
                     <a th:href="@{/grupos/{grupoId}/participantes/eliminar/{usuarioId}(grupoId=${p.grupos.id}, usuarioId=${p.usuario.id})}"
                        class="btn btn-xs btn-error">Eliminar</a>

@@ -2,13 +2,16 @@ package com.cibertec.controllers;
 
 import com.cibertec.models.Grupos;
 import com.cibertec.models.GruposUsuario;
+import com.cibertec.models.GruposUsuarioId;
 import com.cibertec.models.Usuario;
 import com.cibertec.services.GruposService;
 import com.cibertec.services.GruposUsuarioService;
 import com.cibertec.services.UsuarioService;
+import com.cibertec.utils.PasswordUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,11 +27,13 @@ public class GruposUsuarioController {
     private final GruposUsuarioService gruposUsuarioService;
     private final GruposService gruposService;
     private final UsuarioService usuarioService;
+    private final PasswordEncoder passwordEncoder;
 
-    public GruposUsuarioController(GruposUsuarioService gruposUsuarioService, GruposService gruposService, UsuarioService usuarioService) {
+    public GruposUsuarioController(GruposUsuarioService gruposUsuarioService, GruposService gruposService, UsuarioService usuarioService,PasswordEncoder passwordEncoder) {
         this.gruposUsuarioService = gruposUsuarioService;
         this.gruposService = gruposService;
         this.usuarioService = usuarioService;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -63,30 +68,54 @@ public class GruposUsuarioController {
         return "redirect:/grupos/lista";
     }
 
-    // Guardar nuevo participante
     @PostMapping("/{grupoId}/participantes/guardar")
     public String guardarParticipante(@PathVariable Integer grupoId,
-                                      @RequestParam("usuarioId") Integer usuarioId,
+                                      @RequestParam("username") String usuarioInput,
                                       @RequestParam("saldoInicial") BigDecimal saldoInicial,
                                       Model model) {
+        try {
+            Grupos grupo = gruposService.obtenerGrupoPorId(grupoId)
+                    .orElseThrow(() -> new IllegalArgumentException("Grupo no encontrado"));
 
-        Optional<Grupos> grupoOpt = gruposService.obtenerGrupoPorId(grupoId);
-        Optional<Usuario> usuarioOpt = usuarioService.findById(usuarioId);
-
-        if (grupoOpt.isPresent() && usuarioOpt.isPresent()) {
+            // Buscar usuario: si es número, asume ID, si no, busca por username
+            Usuario usuario;
             try {
-                gruposUsuarioService.agregarParticipante(grupoOpt.get(), usuarioOpt.get(), saldoInicial);
-                return "redirect:/grupos/ver/" + grupoId;
-            } catch (Exception e) {
-                model.addAttribute("grupo", grupoOpt.get());
-                model.addAttribute("usuarios", usuarioService.listarUsuarios());
-                model.addAttribute("error", e.getMessage());
-                return "transacciones_grupos/participantes_form";
+                Integer usuarioId = Integer.parseInt(usuarioInput);
+                usuario = usuarioService.findById(usuarioId)
+                        .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+            } catch (NumberFormatException e) {
+                // Si no es número, buscar por username o crear nuevo
+                usuario = usuarioService.findByUsername(usuarioInput)
+                        .orElseGet(() -> {
+                            Usuario nuevoUsuario = new Usuario();
+                            nuevoUsuario.setUsername(usuarioInput);
+                            String passwordAleatoria = PasswordUtils.generarPasswordAleatoria(12);
+                            nuevoUsuario.setPassword(passwordEncoder.encode(passwordAleatoria));
+                            nuevoUsuario.setRol("USER");
+                            return usuarioService.save(nuevoUsuario);
+                        });
             }
-        }
 
-        return "redirect:/grupos/lista";
+            // Crear ID compuesto y entidad
+            GruposUsuarioId id = new GruposUsuarioId(grupo.getId(), usuario.getId());
+            GruposUsuario nuevoParticipante = new GruposUsuario();
+            nuevoParticipante.setId(id);
+            nuevoParticipante.setGrupos(grupo);
+            nuevoParticipante.setUsuario(usuario);
+            nuevoParticipante.setSaldoInicial(saldoInicial);
+            nuevoParticipante.setSaldoActual(saldoInicial);
+
+            gruposUsuarioService.guardarParticipante(nuevoParticipante);
+
+            return "redirect:/grupos/ver/" + grupoId;
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al guardar el participante: " + e.getMessage());
+            model.addAttribute("grupo", gruposService.obtenerGrupoPorId(grupoId).orElse(null));
+            model.addAttribute("usuarios", usuarioService.listarUsuarios());
+            return "transacciones_grupos/participantes_form";
+        }
     }
+
 
     // Eliminar participante
     @GetMapping("/{grupoId}/participantes/eliminar/{usuarioId}")

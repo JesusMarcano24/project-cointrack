@@ -49,4 +49,8 @@ public class UsuarioService implements org.springframework.security.core.userdet
 	public List<Usuario> listarUsuarios() {
 		return usuarioRepository.findAll();
 	}
+
+	public Usuario save(Usuario usuario) {
+		return usuarioRepository.save(usuario);
+	}
 }

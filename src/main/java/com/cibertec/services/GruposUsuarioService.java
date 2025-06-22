@@ -51,4 +51,9 @@ public class GruposUsuarioService {
                 .map(GruposUsuario::getSaldoInicial)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+
+    public void guardarParticipante(GruposUsuario nuevoParticipante) {
+        gruposUsuarioRepository.save(nuevoParticipante);
+    }
+
 }
