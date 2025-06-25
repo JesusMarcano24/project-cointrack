@@ -1,0 +1,71 @@
+name: Deploy CoinTrack Apps to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Save SSH key
+      run: |
+        echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > cointrack-keys.pem
+        chmod 600 cointrack-keys.pem
+
+    - name: Copy project folders to EC2
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: 3.17.29.202
+        username: ubuntu
+        key_path: cointrack-keys.pem
+        source: |
+          project-cointrack/target/CoinTrack-0.0.1-SNAPSHOT.jar
+          cointrack-reportes-api-rest/target/cointrack-reportes-api-rest-0.0.1-SNAPSHOT.jar
+        target: "/home/ubuntu/cointrack"
+
+    - name: Deploy apps on EC2 using Docker
+      uses: appleboy/ssh-action@master
+      with:
+        host: 3.17.29.202
+        username: ubuntu
+        key_path: cointrack-keys.pem
+        script: |
+          cd ~/cointrack
+
+          # Stop and remove old containers
+          docker stop cointrack || true
+          docker rm cointrack || true
+          docker stop reportes || true
+          docker rm reportes || true
+
+          # Create Dockerfile for CoinTrack (Java 23 app)
+          echo '
+          FROM eclipse-temurin:23-jdk-alpine
+          WORKDIR /app
+          COPY CoinTrack-0.0.1-SNAPSHOT.jar app.jar
+          EXPOSE 8080
+          CMD ["java", "-jar", "app.jar"]
+          ' > Dockerfile-cointrack
+
+          # Create Dockerfile for Reportes (Java 21 app)
+          echo '
+          FROM eclipse-temurin:21-jdk-alpine
+          WORKDIR /app
+          COPY cointrack-reportes-api-rest-0.0.1-SNAPSHOT.jar app.jar
+          EXPOSE 8081
+          CMD ["java", "-jar", "app.jar"]
+          ' > Dockerfile-reportes
+
+          # Build Docker images
+          docker build -f Dockerfile-cointrack -t cointrack-app .
+          docker build -f Dockerfile-reportes -t reportes-app .
+
+          # Run containers
+          docker run -d --name cointrack -p 8080:8080 cointrack-app
+          docker run -d --name reportes -p 8081:8081 reportes-app

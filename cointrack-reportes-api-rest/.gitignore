@@ -1,8 +1,10 @@
 HELP.md
+
+# Ignorar todo en target/
 target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+
+# ¡Exceptuar solo el archivo JAR que quieres subir!
+!target/cointrack-reportes-api-rest-0.0.1-SNAPSHOT.jar
 
 ### STS ###
 .apt_generated
