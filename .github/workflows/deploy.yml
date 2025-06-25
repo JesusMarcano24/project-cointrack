@@ -39,6 +39,16 @@ jobs:
         chmod +x mvnw
         ./mvnw clean package -DskipTests
 
+    # ----------- Move JARs to root so SCP can find them -----------
+    - name: Move JARs to root for SCP
+      run: |
+        mv project-cointrack/target/CoinTrack-0.0.1-SNAPSHOT.jar .
+        mv cointrack-reportes-api-rest/target/cointrack-reportes-api-rest-0.0.1-SNAPSHOT.jar .
+
+    # ----------- Optional: list files for debug -----------
+    - name: List files before SCP
+      run: ls -l
+
     # ----------- Prepare SSH key -----------
     - name: Save SSH key
       run: |
@@ -53,11 +63,11 @@ jobs:
         username: ubuntu
         key_path: cointrack-keys.pem
         source: |
-          project-cointrack/target/CoinTrack-0.0.1-SNAPSHOT.jar
-          cointrack-reportes-api-rest/target/cointrack-reportes-api-rest-0.0.1-SNAPSHOT.jar
+          CoinTrack-0.0.1-SNAPSHOT.jar
+          cointrack-reportes-api-rest-0.0.1-SNAPSHOT.jar
         target: "/home/ubuntu/cointrack"
 
-    # ----------- Deploy apps on EC2 via SSH -----------
+    # ----------- Deploy apps on EC2 using Docker -----------
     - name: Deploy apps on EC2 using Docker
       uses: appleboy/ssh-action@master
       with:
