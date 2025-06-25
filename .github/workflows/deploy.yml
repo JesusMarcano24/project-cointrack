@@ -62,9 +62,7 @@ jobs:
         host: 3.17.29.202
         username: ubuntu
         key_path: cointrack-keys.pem
-        source: |
-          CoinTrack-0.0.1-SNAPSHOT.jar
-          cointrack-reportes-api-rest-0.0.1-SNAPSHOT.jar
+        source: CoinTrack-0.0.1-SNAPSHOT.jar,cointrack-reportes-api-rest-0.0.1-SNAPSHOT.jar
         target: "/home/ubuntu/cointrack"
 
     # ----------- Deploy apps on EC2 using Docker -----------
