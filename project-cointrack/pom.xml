@@ -100,11 +100,6 @@
         	<artifactId>cointrack-reportes-api-rest</artifactId>
         	<version>0.0.1-SNAPSHOT</version>
         </dependency>--> 
-    <dependency>
-    	<groupId>com.cibertec.edu</groupId>
-    	<artifactId>cointrack-reportes-api-rest</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
-    </dependency>
     </dependencies>
     
         
