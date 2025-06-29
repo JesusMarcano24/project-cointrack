@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" data-theme="lofi">
+<head>
+    <meta charset="UTF-8">
+    <title>CoinTrack | Reportes de Ingresos Mensuales</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.22/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div th:replace="~{layout/base :: header}"></div>
+    <main class="flex flex-col gap-2 p-5">
+        <header class="flex flex-col gap-5 items-start my-5">
+            <h1 class="text-3xl font-bold">Reportes de Ingresos Mensuales</h1>
+        </header>
+
+        <!-- Si la lista de reportes no está vacía -->
+        <div th:if="${not #lists.isEmpty(reportes)}" class="flex gap-5">
+            <table class="table table-zebra w-full text-center mt-5">
+                <thead>
+                    <tr class="bg-primary text-white text-base">
+                        <th class="cursor-pointer underline border border-white">Usuario ID</th>
+                        <th class="cursor-pointer underline border border-white">Año</th>
+                        <th class="cursor-pointer underline border border-white">Mes</th>
+                        <th class="cursor-pointer underline border border-white">Total Ingresos</th>
+                        <th class="cursor-pointer underline border border-white">Fecha Reporte</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Iterar sobre la lista de reportes -->
+                    <tr th:each="reporte : ${reportes}">
+                        <td th:text="${reporte.usuarioId}"></td>
+                        <td th:text="${reporte.anio}"></td>
+                        <td th:text="${reporte.mes}"></td>
+                        <td th:text="${reporte.totalIngresos}"></td>
+                        <td th:text="${reporte.fechaReporte}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Si la lista de reportes está vacía -->
+        <div th:if="${#lists.isEmpty(reportes)}" class="text-muted">No hay reportes disponibles.</div>
+    </main>
+</body>
+</html>

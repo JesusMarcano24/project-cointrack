@@ -37,6 +37,19 @@ public class UsuarioService implements org.springframework.security.core.userdet
 		return User.builder().username(usuario.getUsername()).password(usuario.getPassword()).roles(usuario.getRol())
 				.build();
 	}
+	
+	public Usuario getUsuarioFromAuthentication() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        
+        if (authentication != null && authentication.getPrincipal() instanceof org.springframework.security.core.userdetails.User) {
+            String username = ((org.springframework.security.core.userdetails.User) authentication.getPrincipal()).getUsername();
+            System.out.print(usuarioRepository.findByUsername(username));
+            return usuarioRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + username));
+        }
+        
+        return null;
+    }
 
 	public Optional<Usuario> findByUsername(String username) {
 		return usuarioRepository.findByUsername(username);
