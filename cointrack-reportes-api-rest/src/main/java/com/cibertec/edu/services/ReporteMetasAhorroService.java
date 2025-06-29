@@ -21,6 +21,18 @@ public class ReporteMetasAhorroService {
         return repository.findByUsuarioId(usuarioId);
     }
 
+    
+    public List<ReporteMetasAhorro> buscarPorNombreYUsuario(Long usuarioId, String metaNombre) {
+        if (usuarioId == null || usuarioId <= 0) {
+            throw new BadRequestException("El usuarioId debe ser válido.");
+        }
+        if (metaNombre == null || metaNombre.trim().isEmpty()) {
+            throw new BadRequestException("El nombre de la meta no puede estar vacío.");
+        }
+
+        return repository.findByUsuarioIdAndMetaNombreContainingIgnoreCase(usuarioId, metaNombre.trim());
+    }
+    
     public ReporteMetasAhorro guardar(ReporteMetasAhorro reporte) {
         if (reporte == null || reporte.getUsuarioId() == null ||
             reporte.getMetaNombre() == null || reporte.getMontoObjetivo() == null ||

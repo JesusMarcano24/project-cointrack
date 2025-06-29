@@ -8,4 +8,6 @@ import com.cibertec.edu.models.ReporteMetasAhorro;
 
 public interface IReporteMetasAhorroRepository extends JpaRepository<ReporteMetasAhorro, Long> {
     List<ReporteMetasAhorro> findByUsuarioId(Long usuarioId);
+    
+    List<ReporteMetasAhorro> findByUsuarioIdAndMetaNombreContainingIgnoreCase(Long usuarioId, String metaNombre);
 }

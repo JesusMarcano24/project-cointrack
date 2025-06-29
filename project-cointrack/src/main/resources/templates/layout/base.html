@@ -1,27 +1,17 @@
 <!DOCTYPE html>
-<html
-        lang="es"
-        data-theme="black"
-        xmlns:th="http://www.thymeleaf.org"
-        xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="es" data-theme="black" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
-<meta charset="UTF-8">
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0">
-<title>CoinTrack</title>
-<link
-  href="https://cdn.jsdelivr.net/npm/daisyui@4.12.22/dist/full.min.css"
-  rel="stylesheet" />
-<script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CoinTrack</title>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.22/dist/full.min.css" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="min-h-screen bg-base-200">
   <header th:fragment="header">
     <nav class="navbar shadow">
       <div class="flex w-full justify-between items-center">
-        <a
-          href="/"
-          class="btn btn-ghost normal-case text-xl">CoinTrack</a>
+        <a href="/" class="btn btn-ghost normal-case text-xl">CoinTrack</a>
         <ul class="menu menu-horizontal items-center px-1">
           <li>
             <a href="/transacciones">Transacciones</a>
@@ -29,13 +19,17 @@
           <li>
             <a th:href="@{/grupos/lista}">Grupos</a>
           </li>
+          <li class="dropdown">
+            <a tabindex="0" class="btn-ghost font-italic">Reportes</a>
+            <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+              <li><a href="/reportes/ingresos">Ingresos</a></li>
+              <li><a href="/reportes/gastos">Gastos</a></li>
+              <li><a href="/reportes/balance">Balance</a></li>
+            </ul>
+          </li>
           <li sec:authorize="isAuthenticated()">
-            <form
-              th:action="@{/logout}"
-              method="post">
-              <button
-                type="submit"
-                class="btn btn-error btn-sm">Cerrar sesión</button>
+            <form th:action="@{/logout}" method="post">
+              <button type="submit" class="btn btn-error btn-sm">Cerrar sesión</button>
             </form>
           </li>
         </ul>

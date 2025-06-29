@@ -10,4 +10,6 @@ import com.cibertec.edu.models.ReporteGastosCategoria;
 @Repository
 public interface IReporteGastosCategoriaRepository extends JpaRepository<ReporteGastosCategoria, Integer> {
 	List<ReporteGastosCategoria> findByUsuarioId(Integer usuarioId);
+	
+	List<ReporteGastosCategoria> findByUsuarioIdAndCategoriaContainingIgnoreCase(Integer usuarioId, String categoria);
 }

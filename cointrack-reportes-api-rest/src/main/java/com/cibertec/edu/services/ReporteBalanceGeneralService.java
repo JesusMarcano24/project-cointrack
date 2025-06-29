@@ -1,5 +1,7 @@
 package com.cibertec.edu.services;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,25 @@ public class ReporteBalanceGeneralService {
             throw new BadRequestException("El usuarioId debe ser válido.");
         }
         return repository.findByUsuarioId(usuarioId);
+    }
+    
+    public List<ReporteBalanceGeneral> obtenerPorRango(Long usuarioId, int anioInicio, int mesInicio, int anioFin, int mesFin) {
+        if (usuarioId == null || usuarioId <= 0) {
+            throw new BadRequestException("usuarioId inválido.");
+        }
+
+        if (mesInicio < 1 || mesInicio > 12 || mesFin < 1 || mesFin > 12) {
+            throw new BadRequestException("Los meses deben estar entre 1 y 12.");
+        }
+
+        YearMonth inicio = YearMonth.of(anioInicio, mesInicio);
+        YearMonth fin = YearMonth.of(anioFin, mesFin);
+
+        if (inicio.isAfter(fin)) {
+            throw new BadRequestException("La fecha de inicio no puede ser posterior a la fecha de fin.");
+        }
+
+        return repository.findByUsuarioIdAndRangoFecha(usuarioId, inicio.atDay(1), fin.atEndOfMonth());
     }
 
     public ReporteBalanceGeneral guardar(ReporteBalanceGeneral reporte) {

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" data-theme="lofi">
+<head>
+    <meta charset="UTF-8">
+    <title>CoinTrack | Reportes de Gastos</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.22/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div th:replace="~{layout/base :: header}"></div>
+    <main class="flex flex-col gap-2 p-5">
+        <header class="flex flex-col gap-5 items-start my-5">
+            <h1 class="text-3xl font-bold">Reportes de Gastos por Categoría</h1>
+        </header>
+
+        <!-- Filtro de categoría -->
+        <form th:action="@{/reportes/gastos}" method="get" class="mb-4">
+            <label for="categoria" class="mr-2">Filtrar por Categoría:</label>
+            <input type="text" id="categoria" name="categoria" placeholder="Ingrese nombre de categoría" class="input input-bordered" />
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+        </form>
+
+        <!-- Si la lista de reportes no está vacía -->
+        <div th:if="${not #lists.isEmpty(reportes)}" class="flex gap-5">
+            <table class="table table-zebra w-full text-center mt-5">
+                <thead>
+                    <tr class="bg-primary text-white text-base">
+                        <th class="cursor-pointer underline border border-white">Usuario ID</th>
+                        <th class="cursor-pointer underline border border-white">Categoría</th>
+                        <th class="cursor-pointer underline border border-white">Monto Total</th>
+                        <th class="cursor-pointer underline border border-white">Fecha Inicio</th>
+                        <th class="cursor-pointer underline border border-white">Fecha Fin</th>
+                        <th class="cursor-pointer underline border border-white">Fecha Reporte</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Iterar sobre la lista de reportes -->
+                    <tr th:each="reporte : ${reportes}">
+                        <td th:text="${reporte.usuarioId}"></td>
+                        <td th:text="${reporte.categoria}"></td>
+                        <td th:text="${reporte.montoTotal}"></td>
+                        <td th:text="${reporte.fechaInicio}"></td>
+                        <td th:text="${reporte.fechaFin}"></td>
+                        <td th:text="${reporte.fechaReporte}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Si la lista de reportes está vacía -->
+        <div th:if="${#lists.isEmpty(reportes)}" class="text-muted">No hay reportes disponibles.</div>
+    </main>
+</body>
+</html>
