@@ -15,7 +15,7 @@ public class ReporteGastosFeignServices {
     private ReporteGastosFeignClient reporteGastosClient;
 
     public List<ReporteGastosFeignDTO> obtenerGastos(Integer i, String categoria) {
-    	if(categoria == null) {
+    	if(categoria == null || categoria == "") {
     		return reporteGastosClient.obtenerGastosTotal(i);
     	}
         return reporteGastosClient.obtenerGastosCategoria(i, categoria);
