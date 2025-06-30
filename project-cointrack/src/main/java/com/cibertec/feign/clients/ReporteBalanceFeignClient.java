@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.cibertec.feign.dtos.ReporteBalanceFeignDTO;
 
-@FeignClient(name = "reportesApi", url = "http://localhost:8081/api/reportes")
+@FeignClient(name = "reportesApi", url = "http://3.17.29.202:8081/api/reportes")
 public interface ReporteBalanceFeignClient {
 
 		@GetMapping("/balance-general/usuario/{usuarioId}")

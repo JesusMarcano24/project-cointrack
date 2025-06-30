@@ -8,7 +8,7 @@ import com.cibertec.feign.dtos.ReporteGastosFeignDTO;
 
 import java.util.List;
 
-@FeignClient(name = "reportesApi", url = "http://localhost:8081/api/reportes")
+@FeignClient(name = "reportesApi", url = "http://3.17.29.202:8081/api/reportes")
 public interface ReporteGastosFeignClient {
 
 	@GetMapping("gastos-categoria/usuario/{usuarioId}")
