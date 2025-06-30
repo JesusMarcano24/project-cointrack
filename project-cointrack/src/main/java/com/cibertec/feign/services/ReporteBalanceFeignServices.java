@@ -13,7 +13,7 @@ public class ReporteBalanceFeignServices {
     @Autowired
     private ReporteBalanceFeignClient reporteBalanceClient;
 
-    public List<ReporteBalanceFeignDTO> obtenerGastos(Integer i, Integer anioInicio, Integer mesInicio, Integer anioFin, Integer mesFin) {
+    public List<ReporteBalanceFeignDTO> obtenerBalance(Integer i, Integer anioInicio, Integer mesInicio, Integer anioFin, Integer mesFin) {
     	if(anioInicio == null || anioFin == null || mesInicio == null || mesFin == null) {
     		return reporteBalanceClient.obtenerBalanceTotal(i);
     	}

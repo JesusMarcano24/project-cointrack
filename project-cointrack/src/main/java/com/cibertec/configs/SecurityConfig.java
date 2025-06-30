@@ -26,6 +26,7 @@ public class SecurityConfig {
 		http.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/transacciones/**").authenticated()
 						.requestMatchers("/grupos/**").authenticated()
+						.requestMatchers("/reportes/**").authenticated()
 						.anyRequest().permitAll())
 				.formLogin(form -> form
 						.loginPage("/login").permitAll()
