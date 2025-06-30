@@ -24,7 +24,7 @@ public class ReporteGastosFeignController {
     @GetMapping("/reportes/gastos")
     public String gastos(@RequestParam(value = "categoria", required = false) String categoria, Model model) {
         Integer userId = usuarioService.getUsuarioFromAuthentication().getId();
-        if (userId == null) {
+        if (userId == null & categoria == null) {
             return "reportes/gastos";
         }
         

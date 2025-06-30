@@ -1,4 +1,61 @@
 <!DOCTYPE html>
-<html>
-	
+<html lang="es" xmlns:th="http://www.thymeleaf.org" data-theme="lofi">
+<head>
+    <meta charset="UTF-8">
+    <title>CoinTrack | Reportes de Balance General</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.22/dist/full.min.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div th:replace="~{layout/base :: header}"></div>
+    <main class="flex flex-col gap-2 p-5">
+        <header class="flex flex-col gap-5 items-start my-5">
+            <h1 class="text-3xl font-bold">Reportes de Balance General</h1>
+        </header>
+        <div class="flex justify-end gap-5 mb-5">
+            <a class="btn btn-sm btn-primary">Agregar</a>
+            <a class="btn btn-sm btn-success">Exportar a Excel</a>
+        </div>
+        <div th:if="${not #lists.isEmpty(reportes)}" class="flex gap-5">
+            <div class="flex flex-col items-center bg-base-200 grow p-2 rounded-xl">
+                <span class="text-green-600 font-bold">Total Ingresos:</span>
+                <span th:text="|S/ ${totalIngresos}|" class="text-2xl font-bold"></span>
+            </div>
+            <div class="flex flex-col items-center bg-base-200 grow p-2 rounded-xl">
+                <span class="text-red-600 font-bold">Total Gastos:</span>
+                <span th:text="|S/ ${totalGastos}|" class="text-2xl font-bold"></span>
+            </div>
+            <div class="flex flex-col items-center bg-base-200 grow p-2 rounded-xl">
+                <span th:class="${totalBalance < 0 ? 'font-bold text-red-700' : 'font-bold text-green-700'}">Balance:</span>
+                <span th:text="|S/ ${totalBalance}|" class="font-bold text-2xl"></span>
+            </div>
+        </div>
+        <div th:if="${#lists.isEmpty(reportes)}" class="text-muted">No hay reportes disponibles.</div>
+        <table class="table table-zebra w-full text-center mt-5" th:if="${not #lists.isEmpty(reportes)}">
+            <thead>
+                <tr class="bg-primary text-white text-base">
+                    <th>Usuario ID</th>
+                    <th>Total Ingresos</th>
+                    <th>Total Gastos</th>
+                    <th>Balance</th>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Fin</th>
+                    <th>Fecha Reporte</th>
+                </tr>
+            </thead>
+			<tbody>
+			    <tr th:each="reporte : ${reportes}">
+			        <td th:text="${reporte.usuarioId}"></td>
+			        <td th:text="${reporte.totalIngresos}"></td>
+			        <td th:text="${reporte.totalGastos}"></td>
+			        <td th:text="${#numbers.formatDecimal(reporte.totalIngresos - reporte.totalGastos, 1, 'COMMA', 2, 'POINT')}"></td>
+			        <td th:text="${reporte.fechaInicio}"></td>
+			        <td th:text="${reporte.fechaFin}"></td>
+			        <td th:text="${reporte.fechaReporte}"></td>
+			    </tr>
+			</tbody>
+
+        </table>
+    </main>
+</body>
 </html>
